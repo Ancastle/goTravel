@@ -1,11 +1,6 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useLayoutEffect } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 
