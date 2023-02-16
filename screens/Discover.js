@@ -25,7 +25,6 @@ const Discover = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [mainData, setMainData] = useState([]);
 
-  console.log(mainData.length);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -121,20 +120,11 @@ const Discover = () => {
             </View>
             <View className="px-4 mt-8 flex-row items-center justify-evenly flex-wrap">
               {mainData?.length > 0 ? (
-                mainData.map((place, i) =>
-                  place.name ? (
-                    <ItemCardContainer
-                      key={i}
-                      imageSrc={
-                        place?.photo?.images?.medium?.url
-                          ? place.photo.images.medium.url
-                          : "https://cdn.pixabay.com/photo/2017/06/21/09/19/spoon-2426623_1280.jpg"
-                      }
-                      title={place?.name}
-                      location={place?.location_string}
-                    />
+                mainData.map((placeData, i) =>
+                  placeData.name ? (
+                    <ItemCardContainer key={i} placeData={placeData} />
                   ) : (
-                    <></>
+                    <View key={i}></View>
                   )
                 )
               ) : (
