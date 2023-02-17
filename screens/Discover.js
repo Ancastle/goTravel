@@ -22,8 +22,13 @@ const Discover = () => {
   const navigation = useNavigation();
 
   const [activeCategory, setActiveCategory] = useState("restaurants");
+  const [isShowingData, setIsShowingData] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [mainData, setMainData] = useState([]);
+  const [bottomLeftLatitude, setBottoLeftLatitude] = useState(null);
+  const [bottomLeftLongitude, setBottomLeftLongitude] = useState(null);
+  const [topRightLatitude, setTopRightLatitude] = useState(null);
+  const [topRightLongitude, setTopRightLongitude] = useState(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,12 +38,24 @@ const Discover = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getPlacesData(activeCategory)
+    getPlacesData(
+      bottomLeftLatitude,
+      bottomLeftLongitude,
+      topRightLatitude,
+      topRightLongitude,
+      activeCategory
+    )
       .then((data) => {
         setMainData(data);
       })
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [
+    bottomLeftLatitude,
+    bottomLeftLongitude,
+    topRightLatitude,
+    topRightLongitude,
+    activeCategory,
+  ]);
 
   return (
     <SafeAreaView className="flex-1 bg-white relative">
@@ -62,8 +79,10 @@ const Discover = () => {
           GooglePlacesDetailsQuery={{ fields: "geometry" }}
           placeholder="Search"
           onPress={(_, details = null) => {
-            // 'details' is provided when fetchDetails = true
-            console.log(details?.geometry?.viewport);
+            setBottoLeftLatitude(details?.geometry?.viewport?.southwest?.lat);
+            setBottomLeftLongitude(details?.geometry?.viewport?.southwest?.lng);
+            setTopRightLatitude(details?.geometry?.viewport?.northeast?.lat);
+            setTopRightLongitude(details?.geometry?.viewport?.northeast?.lng);
           }}
           query={{
             key: "AIzaSyAYO5UET1wWw3DTwg0Zx_sgqyOnwGxGKug",
@@ -128,17 +147,12 @@ const Discover = () => {
                   )
                 )
               ) : (
-                <>
-                  <View className="w-full h-[400px] items-center space-y-8 justify-center">
-                    <Image
-                      source={NotFound}
-                      className="w-32 h-32 object-cover"
-                    />
-                    <Text className="text-2xl text-[#428288] font-semibold">
-                      Oops... no data found
-                    </Text>
-                  </View>
-                </>
+                <View className="w-full h-[400px] items-center space-y-8 justify-center">
+                  <Image source={NotFound} className="w-32 h-32 object-cover" />
+                  <Text className="text-2xl text-[#428288] font-semibold">
+                    Oops... no data found
+                  </Text>
+                </View>
               )}
             </View>
           </View>
